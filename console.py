@@ -39,19 +39,20 @@ class HBNBCommand(cmd.Cmd):
             if match_dict:
                 self.update_dict(classname, uid, match_dict.group(1))
                 return ""
-            match_attr_and_value = re.search('^(?:"([^"]*)")?(?:, (.*))?$', attr_or_dict)
+            match_attr_and_value = re.search('^(?:"([^"]*)")?(?:, (.*))?$',
+                    attr_or_dict)
             if match_attr_and_value:
-                attr_and_value = (match_attr_and_value.group(1) or "") + " " + (match_attr_and_value.group(2) or "")
-            command = method + " " + classname + " " + uid + " " + attr_and_value
+                attr_and_value = (match_attr_and_value.group(1) or "")
+                + " " + (match_attr_and_value.group(2) or "")
+            command = method + " " + classname + " " + uid +
+            " " + attr_and_value
             self.onecmd(command)
             return command
 
     def emptyline(self):
         """ Do not execute anything"""
         pass
-        #if self.lastcmd:
-         #   return self.onecmd(self.lastcmd)
-    
+
     def do_EOF(self, args):
         """EOF command to exit the program"""
         return True
@@ -70,7 +71,7 @@ class HBNBCommand(cmd.Cmd):
         d = json.loads()
         if not class:
             print("** class name missing **")
-        elif classname not not in storage.classes():
+        elif classname not in storage.classes():
             print("** class doesn't exist **")
         elif uid is None:
             print("** instance id is missing **")
@@ -139,7 +140,8 @@ class HBNBCommand(cmd.Cmd):
             if words[0] not in storage.classes():
                 print("** class doesn't exist **")
             else:
-                n1 = [str(obj) for key, obj in storage.all().items() if type(obj).__name__ == words[0]]
+                n1 = [str(obj) for key, obj in storage.all().items()
+                        if type(obj).__name__ == words[0]]
                 print(n1)
         else:
             new_list = [str(obj) for key, obj in storage.all().items()]
@@ -153,7 +155,8 @@ class HBNBCommand(cmd.Cmd):
         elif words[0] not in storage.classes():
             print("** class doesn't exit **")
         else:
-            matches = [ k for j in storage.all() if k.startswith(words[0] + '.')]
+            matches = [k for j in storage.all() if
+                    k.startswith(words[0] + '.')]
             print(len(matches))
 
     def do_update(self, line):
@@ -198,7 +201,7 @@ class HBNBCommand(cmd.Cmd):
                     try:
                         value = cast(value)
                     except ValueError:
-                        pass # fine, stay a string then
+                        pass  # fine, stay a string then
                 setattr(storage.all()[key], attribute, value)
                 storage.all()[key].save()
 
