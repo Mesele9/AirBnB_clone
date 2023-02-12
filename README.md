@@ -26,7 +26,7 @@ In Interactive mode, the console will display a prompt (hbnb) indicating that th
 '''$ ./console.py
 (hbnb) help
 
-Documented commands (type help <topic>):
+###### Documented commands (type help <topic>):
 ========================================
 EOF  help  quit
 
@@ -39,7 +39,7 @@ In Non-interactive mode, the shell will need to be run with a command input pipe
 '''$ echo "help" | ./console.py
 (hbnb)
 
-Documented commands (type help <topic>):
+###### Documented commands (type help <topic>):
 ========================================
 EOF  help  quit
 (hbnb) 
@@ -50,7 +50,7 @@ $
 $ cat test_help | ./console.py
 (hbnb)
 
-Documented commands (type help <topic>):
+###### Documented commands (type help <topic>):
 ========================================
 EOF  help  quit
 (hbnb) 
