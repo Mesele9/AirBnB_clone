@@ -44,10 +44,9 @@ class HBNBCommand(cmd.Cmd):
             if match_attr_and_value:
                 attr_and_value = (match_attr_and_value.group(1) or "")
                 + " " + (match_attr_and_value.group(2) or "")
-            command = method + " " + classname + " " + uid +
-            " " + attr_and_value
-            self.onecmd(command)
-            return command
+        command = method + " " + classname + " " + uid + " " + attr_and_value
+        self.onecmd(command)
+        return command
 
     def emptyline(self):
         """ Do not execute anything"""
@@ -69,7 +68,7 @@ class HBNBCommand(cmd.Cmd):
         """Helper method for update with dictionery"""
         s = s_dict.replace("'", '"')
         d = json.loads()
-        if not class:
+        if not classname:
             print("** class name missing **")
         elif classname not in storage.classes():
             print("** class doesn't exist **")
