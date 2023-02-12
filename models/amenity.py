@@ -1,13 +1,10 @@
 #!/usr/bin/python3
-""" State Module for HBNB project """
-from models.base_model import BaseModel, Base
-from models import storage_type
-from sqlalchemy import Column, String
+"""This module creates a Amenity class"""
 
-class Amenity(BaseModel, Base):
-    '''amenity class'''
-    __tablename__ = 'amenities'
-    if storage_type == 'db':
-        name = Column(String(128), nullable=False)
-    else:
-        name = ""
+from models.base_model import BaseModel
+
+
+class Amenity(BaseModel):
+    """Class for managing amenity objects"""
+
+     name = ""
