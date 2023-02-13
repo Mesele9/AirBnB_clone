@@ -39,8 +39,8 @@ class HBNBCommand(cmd.Cmd):
             if match_dict:
                 self.update_dict(classname, uid, match_dict.group(1))
                 return ""
-            match_attr_and_value = re.search('^(?:"([^"]*)")?(?:, (.*))?$',
-                    attr_or_dict)
+            match_attr_and_value = re.search(
+                    '^(?:"([^"]*)")?(?:, (.*))?$', attr_or_dict)
             if match_attr_and_value:
                 attr_and_value = (match_attr_and_value.group(1) or "")
                 + " " + (match_attr_and_value.group(2) or "")
@@ -139,8 +139,8 @@ class HBNBCommand(cmd.Cmd):
             if words[0] not in storage.classes():
                 print("** class doesn't exist **")
             else:
-                n1 = [str(obj) for key, obj in storage.all().items()
-                        if type(obj).__name__ == words[0]]
+                n1 = [str(obj) for key, obj in storage.all().items() if
+                      type(obj).__name__ == words[0]]
                 print(n1)
         else:
             new_list = [str(obj) for key, obj in storage.all().items()]
@@ -154,8 +154,8 @@ class HBNBCommand(cmd.Cmd):
         elif words[0] not in storage.classes():
             print("** class doesn't exit **")
         else:
-            matches = [k for j in storage.all() if
-                    k.startswith(words[0] + '.')]
+            matches = [
+                    k for j in storage.all() if k.startswith(words[0] + '.')]
             print(len(matches))
 
     def do_update(self, line):
