@@ -1,11 +1,13 @@
-#!/usr/bin/python3
-"""This module creates a User class"""
+#!/usr/bin/env python3
+''' Contains City class '''
 
 from models.base_model import BaseModel
 
 
 class City(BaseModel):
-    """Class for managing city objects"""
+        ''' Represents a city '''
 
-    state_id = ""
-    name = ""
+        class_att_dict = {'name': str, 'state_id': str}
+
+        name = ''
+        state_id = ''

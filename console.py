@@ -1,209 +1,211 @@
-#!/usr/bin/python3
-# Console.py
+#!/usr/bin/env python3
+''' Contains console '''
 
 import cmd
-from models.base_model import BaseModel
-from models import storage
-import json
-import re
+import shlex
+import models
+import datetime
+from import_classes import *
+import sys
+
+#sys.path.append("/home/vagrant/AirBnB_clone/models")
 
 
 class HBNBCommand(cmd.Cmd):
-    """ Class for the command prompt"""
+        ''' Console / command interpreter '''
 
-    prompt = "(hbnb) "
+        def do_quit(self, args):
+                '''Quit command to exit the program '''
+                return True
 
-    def default(self, line):
-        """Use commands if nothing else matches"""
-        self.__precmd(line)
+        def do_EOF(self, args):
+                '''Quit command to exit the program '''
+                return True
 
-    def _precmd(self, line):
-        """Intercepts command to test for class syntax"""
-        match = re.search(r"^(\w*)\.(\w+)(?:\(([^)]*)\))$", line)
-        if not match:
-            return line
-        classname = match.group(1)
-        method = match.group(2)
-        args = match.group(3)
-        match_uid_and_args = re.search('^"([^"]*)"(?:, (.*))?$', args)
-        if match_uid_and_args:
-            uid = match_uid_and_args.group(1)
-            attr_or_dict = match_uid_and_args.group(2)
-        else:
-            uid = args
-            attr_or_dict = False
+        def do_create(self, args):
+                '''Creates a new instance '''
+                try:
+                        args = shlex.split(args)
+                        if len(args) == 0:
+                                raise SyntaxError
+                        obj = eval('{}()'.format(args[0]))
+                        print(obj.id)
+                except SyntaxError:
+                        print("** class name missing **")
+                except NameError:
+                        print("** class doesn't exist **")
 
-        attr_and_value = ""
-        if method == "update" and attr_or_dict:
-            match_dict = re.search('^({.*})$', attr_or_dict)
-            if match_dict:
-                self.update_dict(classname, uid, match_dict.group(1))
-                return ""
-            match_attr_and_value = re.search(
-                    '^(?:"([^"]*)")?(?:, (.*))?$', attr_or_dict)
-            if match_attr_and_value:
-                attr_and_value = (match_attr_and_value.group(1) or "")
-                + " " + (match_attr_and_value.group(2) or "")
-        command = method + " " + classname + " " + uid + " " + attr_and_value
-        self.onecmd(command)
-        return command
+        def do_show(self, args):
+                '''Prints an instance '''
+                try:
+                        args = shlex.split(args)
+                        if len(args) == 0:
+                                raise SyntaxError
+                        elif args[0] not in my_classes:
+                                raise NameError
 
-    def emptyline(self):
-        """ Do not execute anything"""
-        pass
+                        if len(args) == 1:
+                                raise IndexError
+                        obj_dict = models.storage.all()
+                        key = args[0] + '.' + args[1]
+                        if key in obj_dict.keys():
+                                print(obj_dict[key])
+                        else:
+                                raise KeyError
+                except SyntaxError:
+                        print("** class name missing **")
+                except NameError:
+                        print("** class doesn't exist **")
+                except IndexError:
+                        print("** instance id missing **")
+                except KeyError:
+                        print("** no instance found **")
 
-    def do_EOF(self, args):
-        """EOF command to exit the program"""
-        return True
+        def do_destroy(self, args):
+                '''Destroy an instance '''
+                try:
+                        args = shlex.split(args)
+                        if len(args) == 0:
+                                raise SyntaxError
 
-    def do_quit(self, args):
-        """Quit command to exit the program"""
-        return True
+                        if args[0] not in my_classes:
+                                raise NameError
 
-    def do_help(self, args):
-        """ Show help on available commands"""
-        cmd.Cmd.do_help(self, args)
+                        if len(args) == 1:
+                                raise IndexError
 
-    def update_dict(self, classname, uid, s_dict):
-        """Helper method for update with dictionery"""
-        s = s_dict.replace("'", '"')
-        d = json.loads()
-        if not classname:
-            print("** class name missing **")
-        elif classname not in storage.classes():
-            print("** class doesn't exist **")
-        elif uid is None:
-            print("** instance id is missing **")
-        else:
-            key = "{}.{}".format(classname, uid)
-            if key not in storage.all():
-                print("** no instance found **")
-            else:
-                attributes = storage.attributes()[classname]
-                for attribute, value in d.items():
-                    if attribute in attributes:
-                        value = attributes[attribute](value)
-                    setattr(storage.all()[key], attribute, value)
-                    storage.all()[key].save()
+                        obj_dict = models.storage.all()
+                        key = args[0] + '.' + args[1]
+                        if key in obj_dict.keys():
+                                models.storage.delete(key)
+                        else:
+                                raise KeyError
+                except SyntaxError:
+                        print("** class name missing **")
+                except NameError:
+                        print("** class doesn't exist **")
+                except IndexError:
+                        print("** instance id missing **")
+                except KeyError:
+                        print("** no instance found **")
 
-    def do_create(self, line):
-        """ creates an instance"""
-        if line == "" or line is None:
-            print("** class name missing **")
-        elif line not in storage.classes():
-            print("** class doesn't exist **")
-        else:
-            b = storage.classes()[line]()
-            b.save()
-            print(b.id)
+        def do_all(self, args):
+                '''Prints all instances of a class or all classes '''
+                try:
+                        args = shlex.split(args)
+                        instance_list = []
+                        for instance in args:
+                                if instance not in my_classes:
+                                        raise NameError
 
-    def do_show(self, line):
-        """Printss the string representation of an instance"""
-        if line == "" or line is None:
-            print("** class name missing **")
-        else:
-            words = line.split(' ')
-            if words[0] not in storage.classes():
-                print("** class doesn't exist **")
-            elif len(words) < 2:
-                print("** instance id missing **")
-            else:
-                key = "{}.{}".format(words[0], words[1])
-                if key not in storage.all():
-                    print("**no instance found **")
-                else:
-                    print(storage.all()[key])
+                        if len(args) > 0:
+                                for instance in models.storage.all().values():
+                                        if instance.__class__.__name__ in args:
+                                                instance_list.append(instance)
+                        else:
+                                for instance in models.storage.all().values():
+                                        instance_list.append(instance)
 
-    def do_destroy(self, line):
-        """ deletes an instance based on class name and id"""
-        if line == "" or line is None:
-            print("** class name missing **")
-        else:
-            words = line.split(' ')
-            if words[0] not in storage.classes():
-                print("** class doesn't exit")
-            elif len(words) < 2:
-                print("** instance id missing **")
-            else:
-                key = "{}.{}".format(words[0], words[1])
-                if key not in storage.all():
-                    print("** no instance found **")
-                else:
-                    del storage.all[key]
-                    storage.save()
+                        print(instance_list)
+                except NameError:
+                        print('** class doesn\'t exist **')
 
-    def do_all(self, line):
-        """ Print all string representation of all instance"""
-        if line != "":
-            words = line.split(' ')
-            if words[0] not in storage.classes():
-                print("** class doesn't exist **")
-            else:
-                n1 = [str(obj) for key, obj in storage.all().items() if
-                      type(obj).__name__ == words[0]]
-                print(n1)
-        else:
-            new_list = [str(obj) for key, obj in storage.all().items()]
-            print(new_list)
+        def do_update(self, args):
+                ''' Updates an instance '''
+                try:
+                        args = shlex.split(args)
 
-    def do_count(self, line):
-        """ Counts the instance of a class"""
-        words = line.split(' ')
-        if not words[0]:
-            print("** class name missing **")
-        elif words[0] not in storage.classes():
-            print("** class doesn't exit **")
-        else:
-            matches = [
-                    k for j in storage.all() if k.startswith(words[0] + '.')]
-            print(len(matches))
+                        if len(args) == 0:
+                                raise SyntaxError
 
-    def do_update(self, line):
-        """Updates an instance by adding or updating attribute"""
-        if line == "" or line is None:
-            print("** class name missing **")
-            return
+                        if args[0] not in my_classes:
+                                raise NameError
 
-        rex = r'^(\S+)(?:\s(\S+)(?:\s(\S+)(?:\s((?:"[^"]*")|(?:(\S)+)))?)?)?'
-        match = re.search(rex, line)
-        classname = match.group(1)
-        uid = match.group(2)
-        attribute = match.group(3)
-        value = match.group(4)
-        if not match:
-            print("** class name missing **")
-        elif classname not in storage.classes():
-            print("** class doesn't exit **")
-        elif uid is None:
-            print("** instance id missing **")
-        else:
-            key = "{}.{}".format(classname, uid)
-            if key not in storage.all():
-                print("** no instance found **")
-            elif not attribute:
-                print("** attribute name missing **")
-            elif not value:
-                print("** value missing **")
-            else:
-                cast = None
-                if not re.search('^".*"$', value):
-                    if '.' in value:
-                        cast = float
-                    else:
-                        cast = int
-                else:
-                    value = value.replace('"', '')
-                attribute = storage.attributes()[classname]
-                if attribute in attributes:
-                    value = attributes[attribute](value)
-                elif cast:
-                    try:
-                        value = cast(value)
-                    except ValueError:
-                        pass  # fine, stay a string then
-                setattr(storage.all()[key], attribute, value)
-                storage.all()[key].save()
+                        if len(args) == 1:
+                                raise IndexError
+
+                        key = args[0] + '.' + args[1]
+                        if key not in models.storage.all().keys():
+                                raise KeyError
+
+                        if len(args) == 2:
+                                raise AttributeError
+
+                        for i in range(2, len(args), 2):
+                                if i + 1 >= len(args):
+                                        raise ValueError
+                                models.storage.update(key, args[i], args[i + 1])
+                except SyntaxError:
+                        print("** class name missing **")
+                except NameError:
+                        print("** class doesn't exist **")
+                except IndexError:
+                        print("** instance id missing **")
+                except KeyError:
+                        print("** no instance found **")
+                except AttributeError:
+                        print("** attribute name missing **")
+                except ValueError:
+                        print("** value missing **")
+
+        def do_count(self, args):
+                ''' Counts instances of a class '''
+                try:
+                        args = shlex.split(args)
+                        num = 0
+                        if args[0] not in my_classes:
+                                raise NameError
+                        for instance in models.storage.all().values():
+                                if type(instance).__name__ == args[0]:
+                                        num += 1
+                        print(num)
+                except NameError:
+                        print('** class doesn\'t exist **')
+
+        def emptyline(self):
+                ''' Does not repeat prev command on empty line '''
+                pass
+
+        def precmd(self, line):
+                ''' parses line if line has . syntax '''
+                if line.endswith(')'):
+                        line = list(line.partition('.'))
+                        parameters = (line[2].partition)('(')[2]
+                        parameters = parameters.rstrip(')')
+                        line[2] = line[2].partition('(')[0]
+
+                        split_params = shlex.split(parameters)
+
+                        if (len(split_params) >= 2 and
+                           split_params[1].startswith('{')):
+                                parameters = parameters.partition('{')
+                                obj_id = shlex.split(parameters[0])[0]
+                                obj_id = obj_id[:-1]
+                                parameters = parameters[1] + parameters[2]
+
+                                parameters = eval(parameters)
+                                if type(parameters) is not dict:
+                                        print('** no sets **')
+                                        return
+
+                                new_str = ''
+                                for (key, value) in parameters.items():
+                                        pair = repr(key) + ' ' + repr(value)
+                                        new_str = ' '.join([new_str, pair])
+                                parameters = obj_id + ' ' + new_str
+                        else:
+                                for i in range(len(split_params) - 1):
+                                        split_params[i] = split_params[i][:-1]
+
+                                parameters = ' '.join(
+                                             [repr(x) for x in split_params])
+
+                        return ' '.join([line[2], line[0], parameters])
+
+                return line
 
 
 if __name__ == '__main__':
-    HBNBCommand().cmdloop()
+        hbnb_console = HBNBCommand()
+        hbnb_console.prompt = '(hbnb) '
+        hbnb_console.cmdloop()
