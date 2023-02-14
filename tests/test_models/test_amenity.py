@@ -6,10 +6,9 @@ from models.amenity import Amenity
 
 
 class TestAmenity(unittest.TestCase):
-        ''' class for testing Amenity '''
+    ''' class for testing Amenity '''
 
-        def test_attribute_creation(self):
-                ''' testing that instance initializes with correct
-                attributes '''
-                a = Amenity()
-                self.assertEqual(type(a.name), str)
+    def test_attribute_creation(self):
+        ''' testing that instance initializes with correct attributes '''
+        a = Amenity()
+        self.assertEqual(type(a.name), str)

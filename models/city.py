@@ -5,9 +5,9 @@ from models.base_model import BaseModel
 
 
 class City(BaseModel):
-        ''' Represents a city '''
+    ''' Represents a city '''
 
-        class_att_dict = {'name': str, 'state_id': str}
+    class_att_dict = {'name': str, 'state_id': str}
 
-        name = ''
-        state_id = ''
+    name = ''
+    state_id = ''

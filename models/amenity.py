@@ -5,8 +5,8 @@ from models.base_model import BaseModel
 
 
 class Amenity(BaseModel):
-        ''' Represents an amenity '''
+    ''' Represents an amenity '''
 
-        class_att_dict = {'name': str}
+    class_att_dict = {'name': str}
 
-        name = ''
+    name = ''
