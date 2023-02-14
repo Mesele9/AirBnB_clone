@@ -37,7 +37,7 @@ class TestBaseModel(unittest.TestCase):
                      '__class__': 'BaseModel',
                      'test_attribute': 'arbitrary'}
         a = BaseModel(**test_dict)
-        d_dict = d.to_dict()
+        d_dict = a.to_dict()
         self.assertEqual(d_dict, test_dict)
 
 
