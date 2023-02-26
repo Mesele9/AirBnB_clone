@@ -14,7 +14,7 @@
 	width: 390px;
 	padding: 20px;
 	margin: 20px;
-	border: #FF5A5F;
+	border: #FF5A5F solid 1px;
 	border-radius: 4px;
 	display: inline-block;
 	position: relative;
