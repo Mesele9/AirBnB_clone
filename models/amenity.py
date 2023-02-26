@@ -1,9 +1,12 @@
-#!/usr/bin/python3
-"""This module creates a Amenity class"""
+#!/usr/bin/env python3
+''' Contains Amenity class '''
 
 from models.base_model import BaseModel
 
 
 class Amenity(BaseModel):
-    """Class for managing amenity objects"""
-    name = ""
+    ''' Represents an amenity '''
+
+    class_att_dict = {'name': str}
+
+    name = ''

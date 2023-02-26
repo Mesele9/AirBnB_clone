@@ -1,10 +1,12 @@
-#!/usr/bin/python3
-"""This module creates a User class"""
+#!/usr/bin/env python3
+''' Contains State class '''
 
 from models.base_model import BaseModel
 
 
 class State(BaseModel):
-    """Class for managing state objects"""
+    ''' Represents a state in USA '''
 
-    name = ""
+    class_att_dict = {'name': str}
+
+    name = ''

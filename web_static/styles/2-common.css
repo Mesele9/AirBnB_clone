@@ -1,4 +1,10 @@
+<<<<<<< HEAD
 body {
     margin: 0;
     padding: 0;
+=======
+body{
+	padding: unset;
+	margin: unset;
+>>>>>>> 1513f0a9c52c3c980dbcc98d3527a34602bcb351
 }
