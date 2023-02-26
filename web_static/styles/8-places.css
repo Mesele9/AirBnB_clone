@@ -1,19 +1,11 @@
 .places {
+	text-align: center;
 	margin-bottom: 60px;
-}
-
-.boxes {
-	display: flex;
-	justify-content: center;
-	align-items: stretch;
-	flex-wrap: wrap;
 }
 
 .places h1 {
 	font-size: 30px;
-	vertical-align: top;
 	text-align: left;
-	padding: 10px 15px;
 }
 
 .places article {
@@ -28,6 +20,7 @@
 
 .places h2 {
 	font-size: 30px;
+	margin-top: 5px;
 	text-align: center;
 }
 
@@ -67,21 +60,21 @@
 	margin: 0;
 }
 
-.img1 {
+.max_guest {
 	background-image: url("../images/icon_group.png");
 	background-repeat: no-repeat;
 	background-position: center;
 	height: 50px;
 }
 
-.img2 {
+.number_rooms {
 	background-image: url("../images/icon_bed.png");
 	background-repeat: no-repeat;
 	background-position: center;
 	height: 50px;
 }
 
-.img3 {
+.number_bathrooms {
 	background-image: url("../images/icon_bath.png");
 	background-repeat: no-repeat;
 	background-position: center;
